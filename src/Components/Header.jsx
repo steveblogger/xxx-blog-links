@@ -4,7 +4,7 @@ import "./CSS/Header.css"
 function Header() {
     return (
         <header>
-            <h1><a href="/">XXX Blog</a></h1>
+            <h1>XXX Blog Links</h1>
         </header>
     );
 }
