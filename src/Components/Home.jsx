@@ -1,52 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Data } from "./Utilities/Links"
+import { useNavigate, useParams } from 'react-router-dom'
 
 function Home() {
-  const [page, setPage] = useState(1)
+  const params = useParams()
   const [pageData, setPageData] = useState(Data.slice(0, 10))
+  const navigate = useNavigate()
+  var id = 0
 
   function jumpButtons() {
     var links = Data.length
-    var next = (links - (10 * (page - 1))) <= 10
-    console.log(page);
+    var next = (links - (10 * (params.page - 1))) <= 10
     return <div className='nav-buttons'>
-      {page <= 1 ? <span></span> : <button className='prev-button' onClick={prevPage}>Previous</button>}
+      {params.page <= 1 ? <span></span> : <button className='prev-button' onClick={prevPage}>Previous</button>}
       {next ? <span></span> : <button className='next-button' onClick={nextPage}>Next</button>}
     </div>
   }
 
   function prevPage() {
-    var start = (page - 2) * 10
-    setPage(page - 1)
-    if ((Data.length - start) < 10) {
-      setPageData(Data.slice(start))
-    } else {
-      setPageData(Data.slice(start, start + 10))
-    }
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    var page = Number(params.page) - 1
+    navigate("/pages/" + page)
   }
 
   function nextPage() {
-    var start = page * 10
-    setPage(page + 1)
+    var page = Number(params.page) + 1
+    navigate("/pages/" + page)
+  }
+
+  useEffect(() => {
+    var start = (params.page - 1) * 10
     if ((Data.length - start) < 10) {
       setPageData(Data.slice(start))
     } else {
       setPageData(Data.slice(start, start + 10))
     }
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }
+  }, [params])
 
   return (
     <div className='box'>
       {pageData.map((content) => {
-        return content
+        id = id + 1
+        return <div key={id}>{content}</div>
       })
       }
       {jumpButtons()}
